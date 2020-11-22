@@ -39,7 +39,7 @@ public class Collector extends AdvancedRobot {
 
         // check if actually fired
         if (setFireBullet(1.0) != null)
-            currentObservation = new Observation(e.getBearing(), e.getHeading(), e.getDistance());
+            currentObservation = new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity());
     }
 
     // when bullet hits enemy
@@ -86,12 +86,15 @@ public class Collector extends AdvancedRobot {
         private double bearing;
         private double heading;
         private double distance;
+        private double velocity;
         private boolean hit;
+        
 
-        Observation(double bearing, double heading, double distance) {
+        Observation(double bearing, double heading, double distance, double velocity) {
             this.bearing = bearing;
             this.heading = heading;
             this.distance = distance;
+            this.velocity = velocity;
         }
 
         void setHit(boolean hit) { 
@@ -100,7 +103,7 @@ public class Collector extends AdvancedRobot {
 
         @Override
         public String toString() {
-            return String.format("%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, hit);
+            return String.format("%.2f;%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, velocity, hit);
         }
     }
 }
