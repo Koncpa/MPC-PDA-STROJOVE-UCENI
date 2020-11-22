@@ -7,22 +7,20 @@ import java.util.List;
 
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
-import robocode.BulletHitBulletEvent;
-import robocode.BulletHitEvent;
-import robocode.BulletMissedEvent;
+import robocode.Bullet;
 import robocode.ScannedRobotEvent;
 
 public class Collector extends AdvancedRobot {
-
-    private Observation currentObservation;
     private List<Observation> observations;
 
     public Collector() {
-        currentObservation = null;
         observations = new ArrayList<>();
     }
 
     public void run() {
+        // rotate radar, so it has offset to gun
+        setTurnRadarLeft(30);
+
         setAdjustGunForRobotTurn(true);
 
         while (true) {
@@ -33,31 +31,10 @@ public class Collector extends AdvancedRobot {
 
     // here we can collect all information, when we scan some enemy tank
     public void onScannedRobot(ScannedRobotEvent e) {
-        // fire only if no observation is stored
-        if (currentObservation != null)
-            return;
-
+        Bullet bullet = setFireBullet(1.0);
         // check if actually fired
-        if (setFireBullet(1.0) != null)
-            currentObservation = new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity());
-    }
-
-    // when bullet hits enemy
-    public void onBulletHit(BulletHitEvent event) {
-        System.out.println("hit");
-        setHit(true);
-    }
-
-    // when bullet hits other bullet
-    public void onBulletHitBullet(BulletHitBulletEvent event) {
-        System.out.println("missed");
-        setHit(false);
-    }
-
-    // when bullet misses
-    public void onBulletMissed(BulletMissedEvent event) {
-        System.out.println("missed");
-        setHit(false);
+        if (bullet != null)
+            observations.add(new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), bullet));
     }
 
     // save observations on end
@@ -65,16 +42,10 @@ public class Collector extends AdvancedRobot {
         save();
     }
 
-    // sets hit for current observation and adds it to all observations
-    private void setHit(boolean hit) {
-        currentObservation.setHit(true);
-        observations.add(currentObservation);
-        currentObservation = null;
-    }
-
-    //method for adding info to CSv file
+    // method for adding info to CSV file
     private void save() {
-        try (FileWriter writer = new FileWriter("observations.csv")) {
+        // open observations file in append mode
+        try (FileWriter writer = new FileWriter("observations.csv", true)) {
             for (Observation observation: observations) 
                 writer.write(observation.toString());
 
@@ -87,23 +58,22 @@ public class Collector extends AdvancedRobot {
         private double heading;
         private double distance;
         private double velocity;
-        private boolean hit;
-        
+        private Bullet bullet;
 
-        Observation(double bearing, double heading, double distance, double velocity) {
+        Observation(double bearing, double heading, double distance, double velocity, Bullet bullet) {
             this.bearing = bearing;
             this.heading = heading;
             this.distance = distance;
             this.velocity = velocity;
-        }
-
-        void setHit(boolean hit) { 
-            this.hit = hit; 
+            this.bullet = bullet;
         }
 
         @Override
         public String toString() {
-            return String.format("%.2f;%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, velocity, hit);
+            // if bullet is still active don't use this observation
+            if (bullet.isActive())
+                return "";
+            return String.format("%.2f;%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, velocity, bullet.getVictim() != null);
         }
     }
 }
