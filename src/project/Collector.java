@@ -74,7 +74,7 @@ public class Collector extends AdvancedRobot {
 
     //method for adding info to CSv file
     private void save() {
-        try (FileWriter writer = new FileWriter("collected_data/observations.csv")) {
+        try (FileWriter writer = new FileWriter("observations.csv")) {
             for (Observation observation: observations) 
                 writer.write(observation.toString());
 
