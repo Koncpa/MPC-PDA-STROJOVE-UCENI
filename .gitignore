@@ -1,1 +1,5 @@
+.vscode
 bin
+
+config
+robots/robot.database
