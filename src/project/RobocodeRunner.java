@@ -7,7 +7,7 @@ import robocode.control.RobotSpecification;
 
 public class RobocodeRunner {
 
-	private static String robots = "project.Collector*, sample.Walls";
+	private static String robots = "project.Collector*, project.Robot*, sample.SittingDuck";
 
 	public static void main(String[] args) {
 		System.setProperty("NOSECURITY", "true");
@@ -22,7 +22,7 @@ public class RobocodeRunner {
 
 		RobotSpecification[] selectedRobots = engine.getLocalRepository(robots);
 
-		BattleSpecification battleSpec = new BattleSpecification(1, battlefield, selectedRobots);
+		BattleSpecification battleSpec = new BattleSpecification(2, battlefield, selectedRobots);
 
 		engine.runBattle(battleSpec, true);
 
