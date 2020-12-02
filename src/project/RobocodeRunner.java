@@ -26,7 +26,10 @@ public class RobocodeRunner {
 
 		engine.runBattle(battleSpec, true);
 
+		
 		engine.close();
+
+		System.out.println("Hello Vlado! Cau libor"); //gg wp, zahrajeme si hru, kazdej napise jedno slovo a utvorime story. Byl raz jeden 
 
 		System.exit(0);
 	}

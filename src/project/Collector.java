@@ -10,9 +10,11 @@ import robocode.BattleEndedEvent;
 import robocode.Bullet;
 import robocode.ScannedRobotEvent;
 
-public class Collector extends AdvancedRobot {
+public class Collector extends AdvancedRobot { 
+    
+    
+    
     private List<Observation> observations;
-
     public Collector() {
         observations = new ArrayList<>();
     }
@@ -51,29 +53,5 @@ public class Collector extends AdvancedRobot {
 
             writer.close();
         } catch (IOException e) { e.printStackTrace(); }
-    }
-
-    class Observation {
-        private double bearing;
-        private double heading;
-        private double distance;
-        private double velocity;
-        private Bullet bullet;
-
-        Observation(double bearing, double heading, double distance, double velocity, Bullet bullet) {
-            this.bearing = bearing;
-            this.heading = heading;
-            this.distance = distance;
-            this.velocity = velocity;
-            this.bullet = bullet;
-        }
-
-        @Override
-        public String toString() {
-            // if bullet is still active don't use this observation
-            if (bullet.isActive())
-                return "";
-            return String.format("%.2f;%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, velocity, bullet.getVictim() != null);
-        }
     }
 }
