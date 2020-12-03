@@ -3,19 +3,15 @@ from random import randint
 
 from action import Action
 from state import Event, Info, State
-
-actions = [
-    Action('MOVE', 60),
-    Action('FIRE', 1),
-    Action('TURN', 45),
-]
+from model import Model
 
 class Agent:
+    # agent initialization, model loading
     def __init__(self, conn):
         self.conn = conn
-        self.count = 0
-        self.should_fire = []
+        self.model = Model()
 
+    # game loop
     def run(self):
         while True:
             try:
@@ -51,28 +47,11 @@ class Agent:
     def on_turn(self, state):
         actions = []
 
-        if self.count % 20 == 0:
-            actions.append(Action('MOVE', 100))
-        if self.count % 25 == 0:
-            degrees = randint(45, 135)
-            actions.append(Action('TURN', degrees))
-        if self.should_fire:
-            if state.timestamp < 400:
-                actions.append(Action('FIRE', (500 - state.timestamp) / 100))
-            else:
-                actions.append(Action('FIRE', 0.5))
-            actions.append(Action('TURN_GUN', 0))
-            self.should_fire.pop(0)
-        if self.count % 15 == 0 and not self.should_fire:
-            actions.append(Action('TURN_GUN', randint(-360, 360)))
-
-        self.count += 1
-
         self._send_actions(actions)
 
     def on_event(self, event):
-        if event.event_type == 'SCANNED':
-            self.should_fire.append(True)
+        pass
+        # if event.event_type == 'SCANNED':
 
     def _send_actions(self, actions):
         self.conn.send(f'[{", ".join([action.dump() for action in actions])}]\n'.encode('utf8'))
