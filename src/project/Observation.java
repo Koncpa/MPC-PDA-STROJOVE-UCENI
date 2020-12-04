@@ -24,6 +24,6 @@ class Observation {
         // if bullet is still active don't use this observation
         if (bullet.isActive())
             return "";
-        return String.format(Locale.US, "%.2f;%.2f;%.2f;%.2f;%d\n", bearing, heading, distance, velocity, bullet.getVictim() == null ? 0 : 1);
+        return String.format(Locale.US, "%.2f;%.2f;%.2f;%.2f;%.2f;%d\n", bearing, heading, distance, velocity, bullet.getHeading(), (bullet.getVictim() == null) ? 0 : 1);
     }
 }
