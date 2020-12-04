@@ -42,7 +42,7 @@ public class Robot extends AdvancedRobot {
 
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
-        send(new Event(EventType.SCANNED, new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), null)));
+        send(new Event(EventType.SCANNED, new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), this.getHeading(), null))); // TODO? null?
     }
 
     private void send(Object object) {

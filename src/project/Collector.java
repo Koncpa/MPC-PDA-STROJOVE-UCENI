@@ -36,7 +36,7 @@ public class Collector extends AdvancedRobot {
         Bullet bullet = setFireBullet(1.0);
         // check if actually fired
         if (bullet != null)
-            observations.add(new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), bullet));
+            observations.add(new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), this.getHeading(), bullet));
     }
 
     // save observations on end
