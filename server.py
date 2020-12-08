@@ -1,11 +1,8 @@
 from socket import socket, AF_INET, SOCK_STREAM
 from agent import Agent
+from models import SVMModel, KNNModel
 
-# agent = Agent()
-agent = Agent('model/test.h5')
-# agent = Agent('model/test.h5', True)
-
-def server_program(host = 'localhost', port = 5000):
+def server_program(agent, host = 'localhost', port = 5000):
     print(f'Starting Robocode Server {host}:{port}')
 
     server_socket = socket(AF_INET, SOCK_STREAM)
@@ -19,4 +16,10 @@ def server_program(host = 'localhost', port = 5000):
         agent.run(conn)
 
 if __name__ == '__main__':
-    server_program()
+    # agent = Agent(SVMModel('test_svm.pkl'))
+    agent = Agent(KNNModel('test_knn.pkl'))
+
+    # from tensorflow.keras.models import load_model
+    # agent = Agent(load_model('model/sitting_duck.h5'))
+
+    server_program(agent)

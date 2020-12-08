@@ -9,15 +9,10 @@ from util import number_of_inputs
 
 class Agent:
     # model loading
-    def __init__(self, model_name = None, training = False):
+    def __init__(self, model = None, training = False):
+        self.model = model
         self.training = training
         self.last_shoot = 0
-
-        if model_name == None:
-            self.model = None
-        else:
-            from tensorflow.keras.models import load_model
-            self.model = load_model(model_name)
 
     # game loop
     def run(self, conn):
@@ -77,14 +72,14 @@ class Agent:
                     event.observation['gun_to_turn'], 
                     event.observation['distance'],
                     event.observation['angle'],
-                    event.observation['enemy_dx'],
-                    event.observation['enemy_dy'],
-                    event.observation['enemy_heading']
+                    # event.observation['enemy_dx'],
+                    # event.observation['enemy_dy'],
+                    # event.observation['enemy_heading']
                 ]).astype(np.float32).reshape((1, number_of_inputs))
 
                 threshold = 0.25 if self.training else 0.75
 
-                if np.squeeze(self.model(observation).numpy()) > threshold:
+                if np.squeeze(self.model(observation)) > threshold:
                     self.should_shoot = True
         elif event.event_type == 'ROUND_END':
             self.running = False
