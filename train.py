@@ -1,24 +1,29 @@
 import numpy as np
-from csv import reader
+import tensorflow.keras as keras
 
-from model import Model
+from util import read_data, number_of_inputs
 
-with open('observations.csv', 'r') as file:
-    reader = reader(file, delimiter = ';')
-    data = np.array(list(reader))
+data = read_data('observations_filtered.csv')
 
 # divide loaded data to inputs and outputs
-X = data[:, :3].astype(np.float32)
-y = data[:, 3:]
-
-# prepare input data
-
+X = data[:, :number_of_inputs]
+y = data[:, -1]
 
 # initialize mode
-m = Model()
+m = keras.Sequential([
+    keras.layers.Input(shape = (number_of_inputs,)),
+    keras.layers.Dense(24, activation = 'relu'),
+    keras.layers.Dense(12, activation = 'relu'),
+    keras.layers.Dense(1, activation = 'sigmoid'),
+])
 
+m.compile(optimizer = 'adam', loss = 'mse', metrics = ['accuracy'])
+
+# load previous
+# m = keras.models.load_model('model/test.h5')
 
 # train and evaluate
-
+m.fit(X, y, epochs = 30, batch_size = 4, validation_split = 0.1)
 
 # save model
+m.save('model/test.h5')

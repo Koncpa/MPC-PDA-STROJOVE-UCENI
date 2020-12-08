@@ -7,7 +7,7 @@ import robocode.control.RobotSpecification;
 
 public class RobocodeRunner {
 
-	private static String robots = "project.Collector*, project.Robot*, sample.SittingDuck";
+	private static String robots = "project.Collector*, sample.Walls";
 
 	public static void main(String[] args) {
 		System.setProperty("NOSECURITY", "true");
@@ -22,14 +22,11 @@ public class RobocodeRunner {
 
 		RobotSpecification[] selectedRobots = engine.getLocalRepository(robots);
 
-		BattleSpecification battleSpec = new BattleSpecification(2, battlefield, selectedRobots);
+		BattleSpecification battleSpec = new BattleSpecification(1000, battlefield, selectedRobots);
 
 		engine.runBattle(battleSpec, true);
 
-		
 		engine.close();
-
-		System.out.println("Hello Vlado! Cau libor"); //gg wp, zahrajeme si hru, kazdej napise jedno slovo a utvorime story. Byl raz jeden 
 
 		System.exit(0);
 	}

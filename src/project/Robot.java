@@ -10,6 +10,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import robocode.AdvancedRobot;
+import robocode.BattleEndedEvent;
+import robocode.Bullet;
+import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
 
 public class Robot extends AdvancedRobot {
@@ -23,8 +26,6 @@ public class Robot extends AdvancedRobot {
     }
 
     public void run() {
-        setAdjustGunForRobotTurn(true);
-
         try(Socket socket = new Socket("localhost", 5000)) {
             writer = new PrintWriter(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -40,9 +41,22 @@ public class Robot extends AdvancedRobot {
         }
     }
 
+    // method to be overriden by collector, so it can collect info from fired bullet
+    public void onFired(Bullet bullet) {}
+
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
-        send(new Event(EventType.SCANNED, new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), this.getHeading(), null))); // TODO? null?
+        send(new Event(EventType.SCANNED, new Observation(getX(), getY(), e.getBearing(), getHeading(), getGunHeading(), e.getDistance(), e.getHeading(), e.getVelocity())));
+    }
+
+    @Override
+    public void onRoundEnded(RoundEndedEvent e) {
+        send(new Event(EventType.ROUND_END, null));
+    }
+
+    @Override
+    public void onBattleEnded(BattleEndedEvent e) {
+        send(new Event(EventType.BATTLE_END, null));
     }
 
     private void send(Object object) {
@@ -56,7 +70,7 @@ public class Robot extends AdvancedRobot {
         for(Action action: actions) {
             switch(action.actionType) {
                 case FIRE:
-                    setFire(action.value);
+                    onFired(setFireBullet(action.value));
                     break;
                 case MOVE:
                     setAhead(action.value);
@@ -67,6 +81,8 @@ public class Robot extends AdvancedRobot {
                 case TURN_GUN:
                     setTurnGunLeft(action.value);
                     break;
+                case TURN_RADAR:
+                    setTurnRadarLeft(action.value);
             }
         }
 
@@ -107,7 +123,7 @@ public class Robot extends AdvancedRobot {
     }
 
     enum EventType {
-        SCANNED
+        SCANNED, ROUND_END, BATTLE_END
     }
 
     enum MessageType {
@@ -120,6 +136,6 @@ public class Robot extends AdvancedRobot {
     }
 
     enum ActionType {
-        FIRE, MOVE, TURN, TURN_GUN
+        FIRE, MOVE, TURN, TURN_GUN, TURN_RADAR
     }
 }
