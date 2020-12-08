@@ -1,6 +1,10 @@
 from socket import socket, AF_INET, SOCK_STREAM
 from agent import Agent
 
+# agent = Agent()
+agent = Agent('model/test.h5')
+# agent = Agent('model/test.h5', True)
+
 def server_program(host = 'localhost', port = 5000):
     print(f'Starting Robocode Server {host}:{port}')
 
@@ -12,8 +16,7 @@ def server_program(host = 'localhost', port = 5000):
         conn, address = server_socket.accept()
         print(f'Connection from: {str(address)}')
         
-        Agent(conn).run()
-
+        agent.run(conn)
 
 if __name__ == '__main__':
     server_program()

@@ -15,3 +15,5 @@ class State:
 class Event:
     def __init__(self, data):
         self.event_type = data['event_type']
+        if 'observation' in data:
+            self.observation = data['observation']
