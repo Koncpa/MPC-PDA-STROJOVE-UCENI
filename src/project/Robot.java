@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import robocode.AdvancedRobot;
 import robocode.BattleEndedEvent;
 import robocode.Bullet;
+import robocode.DeathEvent;
 import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
 

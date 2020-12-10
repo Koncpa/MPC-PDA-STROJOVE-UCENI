@@ -11,14 +11,17 @@ class Agent:
     # model loading
     def __init__(self, model = None, training = False):
         self.model = model
-        self.training = training
-        self.last_shoot = 0
+        self.training = training or model == None
+        self.gun_offset = 30
 
     # game loop
     def run(self, conn):
         self.running = True
         self.should_shoot = False
         self.conn = conn
+
+        self.last_shoot = 0
+        self.angle = 0
 
         while self.running:
             try:
@@ -52,7 +55,7 @@ class Agent:
         print(f'Info: {info}')
 
     def on_turn(self, state):
-        actions = [Action('TURN_GUN', -360), Action('TURN_RADAR', -360)]
+        actions = [Action('TURN_GUN', -360 if self.training else self.angle), Action('TURN_RADAR', -360)]
 
         if self.should_shoot or (self.training and state.timestamp - self.last_shoot > 150):
             actions.append(Action('FIRE', 1))
@@ -60,6 +63,8 @@ class Agent:
 
             self.last_shoot = state.timestamp
 
+        self.angle = 0
+        self.move = 0
 
         self._send_actions(actions)
 
@@ -72,10 +77,13 @@ class Agent:
                     event.observation['gun_to_turn'], 
                     event.observation['distance'],
                     event.observation['angle'],
+                    event.observation['remaining_to_wall'],
                     # event.observation['enemy_dx'],
                     # event.observation['enemy_dy'],
-                    # event.observation['enemy_heading']
+                    event.observation['enemy_heading']
                 ]).astype(np.float32).reshape((1, number_of_inputs))
+
+                self.angle = event.observation['gun_to_turn'] * -180 + self.gun_offset
 
                 threshold = 0.25 if self.training else 0.75
 

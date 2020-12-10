@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import robocode.Bullet;
+import robocode.DeathEvent;
 import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
 
@@ -40,7 +41,7 @@ public class Collector extends Robot {
     @Override
     public void onRoundEnded(RoundEndedEvent e) {
         super.onRoundEnded(e);
-
+        
         save();
     }
 

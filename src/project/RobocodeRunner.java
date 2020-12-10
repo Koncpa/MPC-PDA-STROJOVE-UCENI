@@ -7,6 +7,9 @@ import robocode.control.RobotSpecification;
 
 public class RobocodeRunner {
 
+	public static int width = 800;
+	public static int height = 600;
+
 	private static String robots = "project.Collector*, sample.Walls";
 
 	public static void main(String[] args) {
@@ -18,11 +21,11 @@ public class RobocodeRunner {
 
 		engine.setVisible(true);
 
-		BattlefieldSpecification battlefield = new BattlefieldSpecification(800, 600);
+		BattlefieldSpecification battlefield = new BattlefieldSpecification(width, height);
 
 		RobotSpecification[] selectedRobots = engine.getLocalRepository(robots);
 
-		BattleSpecification battleSpec = new BattleSpecification(1000, battlefield, selectedRobots);
+		BattleSpecification battleSpec = new BattleSpecification(500, battlefield, selectedRobots);
 
 		engine.runBattle(battleSpec, true);
 
