@@ -2,7 +2,7 @@ import numpy as np
 from csv import reader, writer
 from sys import argv
 
-number_of_inputs = 6
+number_of_inputs = 5
 
 def read_data(file_name):
     with open(file_name, 'r') as file:
@@ -14,7 +14,7 @@ def filter_data(file_name):
     data = read_data(f'{file_name}.csv')
 
     hits = _filter(data[np.where(data[:, -1] == 1)[0]], 0.001)
-    misses = _filter(data[np.where(data[:, -1] == 0)[0]], 0.1)
+    misses = _filter(data[np.where(data[:, -1] == 0)[0]], 0.2)
 
     # make sure theres even number of hits as misses
     misses = misses[:hits.shape[0]]

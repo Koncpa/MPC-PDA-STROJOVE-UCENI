@@ -16,10 +16,11 @@ def server_program(agent, host = 'localhost', port = 5000):
         agent.run(conn)
 
 if __name__ == '__main__':
-    # agent = Agent(SVMModel('test_svm.pkl'))
-    agent = Agent(KNNModel('test_knn.pkl'))
+    # agent = Agent()
+    # agent = Agent(SVMModel('model/walls_svm.pkl'))
+    # agent = Agent(KNNModel('model/walls_knn.pkl'))
 
-    # from tensorflow.keras.models import load_model
-    # agent = Agent(load_model('model/sitting_duck.h5'))
+    from tensorflow.keras.models import load_model
+    agent = Agent(load_model('model/walls.h5'))
 
     server_program(agent)
