@@ -5,40 +5,43 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import robocode.AdvancedRobot;
-import robocode.BattleEndedEvent;
 import robocode.Bullet;
+import robocode.DeathEvent;
+import robocode.RoundEndedEvent;
 import robocode.ScannedRobotEvent;
 
-public class Collector extends AdvancedRobot {
+public class Collector extends Robot { 
     private List<Observation> observations;
+    private Observation observation;
 
     public Collector() {
+        super();
+
         observations = new ArrayList<>();
-    }
-
-    public void run() {
-        // rotate radar, so it has offset to gun
-        setTurnRadarLeft(30);
-
-        setAdjustGunForRobotTurn(true);
-
-        while (true) {
-            setTurnGunLeft(360);
-            execute();
-        }
+        observation = null;
     }
 
     // here we can collect all information, when we scan some enemy tank
+    @Override
     public void onScannedRobot(ScannedRobotEvent e) {
-        Bullet bullet = setFireBullet(1.0);
-        // check if actually fired
-        if (bullet != null)
-            observations.add(new Observation(e.getBearing(), e.getHeading(), e.getDistance(), e.getVelocity(), bullet));
+        super.onScannedRobot(e);
+
+        observation = new Observation(getX(), getY(), e.getBearing(), getHeading(), getGunHeading(), e.getDistance(), e.getHeading(), e.getVelocity());
+    }
+
+    @Override
+    public void onFired(Bullet bullet) {
+        if (bullet != null) {
+            observations.add(observation);
+            observation.setBullet(bullet);
+        }
     }
 
     // save observations on end
-    public void onBattleEnded(BattleEndedEvent event) {
+    @Override
+    public void onRoundEnded(RoundEndedEvent e) {
+        super.onRoundEnded(e);
+        
         save();
     }
 
@@ -51,29 +54,5 @@ public class Collector extends AdvancedRobot {
 
             writer.close();
         } catch (IOException e) { e.printStackTrace(); }
-    }
-
-    class Observation {
-        private double bearing;
-        private double heading;
-        private double distance;
-        private double velocity;
-        private Bullet bullet;
-
-        Observation(double bearing, double heading, double distance, double velocity, Bullet bullet) {
-            this.bearing = bearing;
-            this.heading = heading;
-            this.distance = distance;
-            this.velocity = velocity;
-            this.bullet = bullet;
-        }
-
-        @Override
-        public String toString() {
-            // if bullet is still active don't use this observation
-            if (bullet.isActive())
-                return "";
-            return String.format("%.2f;%.2f;%.2f;%.2f;%s\n", bearing, heading, distance, velocity, bullet.getVictim() != null);
-        }
     }
 }
