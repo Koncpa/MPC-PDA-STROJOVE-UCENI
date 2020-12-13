@@ -29,6 +29,7 @@ public class Collector extends Robot {
         observation = new Observation(getX(), getY(), e.getBearing(), getHeading(), getGunHeading(), e.getDistance(), e.getHeading(), e.getVelocity());
     }
 
+    //adding the last observation after fireing the bullet
     @Override
     public void onFired(Bullet bullet) {
         if (bullet != null) {
@@ -37,10 +38,10 @@ public class Collector extends Robot {
         }
     }
 
-    // save observations on end
+    // this method saves data on the end of round
     @Override
     public void onRoundEnded(RoundEndedEvent e) {
-        super.onRoundEnded(e);
+        super.onRoundEnded(e);    //scanning enemy tank data - written in Observation class
         
         save();
     }

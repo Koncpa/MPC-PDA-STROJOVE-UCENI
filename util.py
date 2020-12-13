@@ -10,6 +10,7 @@ def read_data(file_name):
         np.random.shuffle(data)
         return data
 
+# filtering similar observated data (the same number of hits and misses is needed bcs of learning - learn the same number when you hit or lose to avoid overtrain)
 def filter_data(file_name):
     data = read_data(f'{file_name}.csv')
 
