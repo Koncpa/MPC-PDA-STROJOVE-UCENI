@@ -22,12 +22,15 @@ class Observation {
         this.distance = distance;
         this.enemyHeading = enemyHeading % 90;
 
+        // use velocity and enemyHeading to count the speed vector [Dx, Dy]
         this.enemyDx = enemyVelocity * Math.sin(Math.PI * enemyHeading / 180);
         this.enemyDy = enemyVelocity * Math.cos(Math.PI * enemyHeading / 180);
 
+        // count enemy coordinates for remainingToWall parameter
         double enemyX = x + distance * Math.sin(Math.PI * (bearing + heading) / 180);
         double enemyY = y + distance * Math.cos(Math.PI * (bearing + heading) / 180);
 
+        // how far from the wall the enemy robot is
         if (Math.abs(enemyDx) > 0.001)
             remainingToWall = (enemyDx > 0 ? RobocodeRunner.width - enemyX : enemyX) / RobocodeRunner.width;
         else if (Math.abs(enemyDy) > 0.001)
@@ -36,8 +39,10 @@ class Observation {
             remainingToWall = 0;
 
         double relativeBulletHeading = toRelative(gunHeading - heading);
+        // at what angle the gun must be turned to be pointed straight at the enemy
         this.gunToTurn = toRelative(bearing - relativeBulletHeading);
 
+        // at what angle the enemy is turned relatively to gunHeading
         this.angle = Math.abs(toRelative(gunHeading - enemyHeading));
 
         normalize();
@@ -49,7 +54,7 @@ class Observation {
 
     @Override
     public String toString() {
-        // if bullet is still active don't use this observation
+        // don't use this observation if the bullet is still active·
         if (bullet.isActive())
             return "";
         
@@ -60,6 +65,7 @@ class Observation {
     	return (input >= 180 ) ? -(360 - input) : (input < -180) ? (360 + input) : input;
     }
 
+    // used for normalizing data to values from -1 to 1
     private void normalize() {
         this.x = (this.x - RobocodeRunner.width / 2) / RobocodeRunner.width;
         this.y = (this.y - RobocodeRunner.height / 2) / RobocodeRunner.height;
