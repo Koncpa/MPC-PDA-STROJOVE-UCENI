@@ -10,6 +10,8 @@ import robocode.control.events.BattleStartedEvent;
 
 public class BattleObserver extends BattleAdaptor {
 
+	//additional notation of game process
+
 	public void onBattleStarted(BattleStartedEvent e) {
 		System.out.println("-- Battle started --");
 	}

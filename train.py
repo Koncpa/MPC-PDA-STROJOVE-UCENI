@@ -3,10 +3,12 @@ import tensorflow.keras as keras
 
 from util import read_data, number_of_inputs
 
+#define model of machine learning via tensorflow library
 data = read_data('observations_filtered.csv')
 
 # divide loaded data to inputs and outputs
 X = data[:, :number_of_inputs]
+#predicated data
 y = data[:, -1]
 
 # initialize mode
@@ -17,6 +19,7 @@ m = keras.Sequential([
     keras.layers.Dense(1, activation = 'sigmoid'),
 ])
 
+# optimizer for correcting weights in machine learning, loss function for calculating mistakes
 m.compile(optimizer = 'adam', loss = 'mse', metrics = ['accuracy'])
 
 # load previous
