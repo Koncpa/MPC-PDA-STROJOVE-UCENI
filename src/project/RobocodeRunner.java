@@ -6,7 +6,7 @@ import robocode.control.RobocodeEngine;
 import robocode.control.RobotSpecification;
 
 public class RobocodeRunner {
-
+	// define the static size of game map
 	public static int width = 800;
 	public static int height = 600;
 

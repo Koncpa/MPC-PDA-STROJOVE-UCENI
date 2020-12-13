@@ -14,7 +14,7 @@ class Agent:
         self.training = training or model == None
         self.gun_offset = 30
 
-    # game loop
+    # game loop once client/robot is connected
     def run(self, conn):
         self.running = True
         self.should_shoot = False
@@ -53,10 +53,12 @@ class Agent:
 
     def on_start(self, info):
         print(f'Info: {info}')
-
+	
     def on_turn(self, state):
+    	# when is turn on robot, it is turning gun and radar in 360 degrees
         actions = [Action('TURN_GUN', -360 if self.training else self.angle), Action('TURN_RADAR', -360)]
 
+		# when is decided - fire the bullet
         if self.should_shoot or (self.training and state.timestamp - self.last_shoot > 150):
             actions.append(Action('FIRE', 1))
             self.should_shoot = False
@@ -84,7 +86,8 @@ class Agent:
                 ]).astype(np.float32).reshape((1, number_of_inputs))
 
                 self.angle = event.observation['gun_to_turn'] * -180 + self.gun_offset
-
+				
+				# when is chance of hit enemy 75 percent - fire, it can be 50% but 75% is for better results
                 threshold = 0.25 if self.training else 0.75
 
                 if np.squeeze(self.model(observation)) > threshold:

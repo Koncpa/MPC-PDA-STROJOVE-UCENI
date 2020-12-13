@@ -42,7 +42,7 @@ public class Robot extends AdvancedRobot {
         }
     }
 
-    // method to be overriden by collector, so it can collect info from fired bullet
+    // method to be overridden by collector, so it can collect info from fired bullet
     public void onFired(Bullet bullet) {}
 
     @Override
