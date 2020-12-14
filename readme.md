@@ -1,3 +1,10 @@
+## Spuštění
+
+- nainstalování potřebných balíčků `pip install numpy tensorflow scikit`
+- nastavení požadovaného modelu v `server.py`
+- spuštění serveru `python server.py`
+- spuštění robocode
+
 ## Výsledky
 
 Uvedena je úspěšnost střelby a počet výstřelů během 500 her.
