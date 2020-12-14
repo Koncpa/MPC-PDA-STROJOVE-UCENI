@@ -12,7 +12,7 @@ class Agent:
     def __init__(self, model = None, training = False):
         self.model = model
         self.training = training or model == None
-        self.gun_offset = 30
+        self.gun_offset = -30
 
     # game loop once client/robot is connected
     def run(self, conn):
